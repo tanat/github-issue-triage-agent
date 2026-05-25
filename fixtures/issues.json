@@ -1,0 +1,852 @@
+[
+  {
+    "issueRef": "shadcn-ui/ui#10576",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 10576,
+    "title": "[bug]: Sidebar outline menu button shadow wraps OKLCH tokens in hsl()",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      "apps/v4/public/r/styles/base-luma/sidebar.json",
+      "apps/v4/public/r/styles/base-lyra/sidebar.json",
+      "apps/v4/public/r/styles/base-maia/sidebar.json",
+      "apps/v4/public/r/styles/base-mira/sidebar.json",
+      "apps/v4/public/r/styles/base-nova/sidebar.json",
+      "apps/v4/public/r/styles/base-sera/sidebar.json",
+      "apps/v4/public/r/styles/base-vega/sidebar.json",
+      "apps/v4/public/r/styles/new-york-v4/sidebar.json",
+      "apps/v4/public/r/styles/radix-luma/sidebar.json",
+      "apps/v4/public/r/styles/radix-lyra/sidebar.json",
+      "apps/v4/public/r/styles/radix-maia/sidebar.json",
+      "apps/v4/public/r/styles/radix-mira/sidebar.json",
+      "apps/v4/public/r/styles/radix-nova/sidebar.json",
+      "apps/v4/public/r/styles/radix-sera/sidebar.json",
+      "apps/v4/public/r/styles/radix-vega/sidebar.json",
+      "apps/v4/registry/new-york-v4/ui/sidebar.tsx",
+      "apps/v4/registry/styles/style-luma.css",
+      "apps/v4/registry/styles/style-lyra.css",
+      "apps/v4/registry/styles/style-maia.css",
+      "apps/v4/registry/styles/style-mira.css",
+      "apps/v4/registry/styles/style-nova.css",
+      "apps/v4/registry/styles/style-sera.css",
+      "apps/v4/registry/styles/style-vega.css",
+      "apps/v4/styles/base-luma/ui/sidebar.tsx",
+      "apps/v4/styles/base-lyra/ui/sidebar.tsx",
+      "apps/v4/styles/base-maia/ui/sidebar.tsx",
+      "apps/v4/styles/base-mira/ui/sidebar.tsx",
+      "apps/v4/styles/base-nova/ui-rtl/sidebar.tsx",
+      "apps/v4/styles/base-nova/ui/sidebar.tsx",
+      "apps/v4/styles/base-sera/ui/sidebar.tsx",
+      "apps/v4/styles/base-vega/ui/sidebar.tsx",
+      "apps/v4/styles/radix-luma/ui/sidebar.tsx",
+      "apps/v4/styles/radix-lyra/ui/sidebar.tsx",
+      "apps/v4/styles/radix-maia/ui/sidebar.tsx",
+      "apps/v4/styles/radix-mira/ui/sidebar.tsx",
+      "apps/v4/styles/radix-nova/ui-rtl/sidebar.tsx",
+      "apps/v4/styles/radix-nova/ui/sidebar.tsx",
+      "apps/v4/styles/radix-sera/ui/sidebar.tsx",
+      "apps/v4/styles/radix-vega/ui/sidebar.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      10577
+    ],
+    "fetchedAt": "2026-05-09T11:48:16.865Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#10320",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 10320,
+    "title": "[bug]: `shadcn init` silently creates a `feat: initial commit` git commit, breaking workflows that rely on explicit commit control",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      ".changeset/fresh-timers-init.md",
+      "packages/shadcn/src/commands/init.test.ts",
+      "packages/shadcn/src/commands/init.ts"
+    ],
+    "expectedSimilarIssues": [
+      7999
+    ],
+    "linkedPrs": [
+      10436
+    ],
+    "fetchedAt": "2026-05-09T11:48:17.289Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#10237",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 10237,
+    "title": "[bug]: Unable to apply background color (OKLCH / CSS variables) to <option> in Select / native select fallback",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/public/r/styles/base-luma/native-select.json",
+      "apps/v4/public/r/styles/base-lyra/native-select.json",
+      "apps/v4/public/r/styles/base-maia/native-select.json",
+      "apps/v4/public/r/styles/base-mira/native-select.json",
+      "apps/v4/public/r/styles/base-nova/native-select.json",
+      "apps/v4/public/r/styles/base-vega/native-select.json",
+      "apps/v4/public/r/styles/new-york-v4/native-select.json",
+      "apps/v4/public/r/styles/radix-luma/native-select.json",
+      "apps/v4/public/r/styles/radix-lyra/native-select.json",
+      "apps/v4/public/r/styles/radix-maia/native-select.json",
+      "apps/v4/public/r/styles/radix-mira/native-select.json",
+      "apps/v4/public/r/styles/radix-nova/native-select.json",
+      "apps/v4/public/r/styles/radix-vega/native-select.json",
+      "apps/v4/registry/bases/base/ui/native-select.tsx",
+      "apps/v4/registry/bases/radix/ui/native-select.tsx",
+      "apps/v4/registry/new-york-v4/ui/native-select.tsx",
+      "apps/v4/styles/base-luma/ui/native-select.tsx",
+      "apps/v4/styles/base-lyra/ui/native-select.tsx",
+      "apps/v4/styles/base-maia/ui/native-select.tsx",
+      "apps/v4/styles/base-mira/ui/native-select.tsx",
+      "apps/v4/styles/base-nova/ui-rtl/native-select.tsx",
+      "apps/v4/styles/base-nova/ui/native-select.tsx",
+      "apps/v4/styles/base-vega/ui/native-select.tsx",
+      "apps/v4/styles/radix-luma/ui/native-select.tsx",
+      "apps/v4/styles/radix-lyra/ui/native-select.tsx",
+      "apps/v4/styles/radix-maia/ui/native-select.tsx",
+      "apps/v4/styles/radix-mira/ui/native-select.tsx",
+      "apps/v4/styles/radix-nova/ui-rtl/native-select.tsx",
+      "apps/v4/styles/radix-nova/ui/native-select.tsx",
+      "apps/v4/styles/radix-vega/ui/native-select.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      10242
+    ],
+    "fetchedAt": "2026-05-09T11:48:17.777Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#10164",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 10164,
+    "title": "CLI should send Accept: application/json headers when fetching from a registry URL",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      ".changeset/quiet-amber-field.md",
+      "apps/v4/content/docs/registry/getting-started.mdx",
+      "packages/shadcn/src/registry/fetcher.test.ts",
+      "packages/shadcn/src/registry/fetcher.ts"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      10179
+    ],
+    "fetchedAt": "2026-05-09T11:48:18.203Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#10028",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 10028,
+    "title": "[bug]: Setup does not work",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [],
+    "fetchedAt": "2026-05-09T11:48:19.144Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9914",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9914,
+    "title": "[bug]: --presets map to radix",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "skills/shadcn/SKILL.md",
+      "skills/shadcn/cli.md"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9923
+    ],
+    "fetchedAt": "2026-05-09T11:48:20.332Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9753",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9753,
+    "title": "[bug]: \"Select\" Component (BaseUI) render the \"value\" prop not the Text",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/content/docs/components/base/select.mdx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9755
+    ],
+    "fetchedAt": "2026-05-09T11:48:21.739Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9657",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9657,
+    "title": "[bug]:Need to Update the Manual installation Document. ",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/content/docs/installation/manual.mdx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9660
+    ],
+    "fetchedAt": "2026-05-09T11:48:22.749Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9651",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9651,
+    "title": "[bug]: missing disabled style for Accordion with base-ui",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/examples/base/ui-rtl/accordion.tsx",
+      "apps/v4/examples/base/ui/accordion.tsx",
+      "apps/v4/public/r/styles/base-lyra/accordion.json",
+      "apps/v4/public/r/styles/base-maia/accordion.json",
+      "apps/v4/public/r/styles/base-mira/accordion.json",
+      "apps/v4/public/r/styles/base-nova/accordion.json",
+      "apps/v4/public/r/styles/base-vega/accordion.json",
+      "apps/v4/registry/bases/base/ui/accordion.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9654
+    ],
+    "fetchedAt": "2026-05-09T11:48:23.869Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9635",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9635,
+    "title": "[bug]:Badge classes order",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/examples/base/ui-rtl/badge.tsx",
+      "apps/v4/examples/base/ui/badge.tsx",
+      "apps/v4/public/r/styles/base-lyra/badge.json",
+      "apps/v4/public/r/styles/base-maia/badge.json",
+      "apps/v4/public/r/styles/base-mira/badge.json",
+      "apps/v4/public/r/styles/base-nova/badge.json",
+      "apps/v4/public/r/styles/base-vega/badge.json",
+      "apps/v4/registry/bases/base/ui/badge.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9638
+    ],
+    "fetchedAt": "2026-05-09T11:48:24.955Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9614",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9614,
+    "title": "[bug]: Base UI Button as link has wrong role",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/content/docs/components/base/button.mdx",
+      "apps/v4/examples/base/button-render.tsx",
+      "apps/v4/public/r/styles/base-lyra/button-example.json",
+      "apps/v4/public/r/styles/base-maia/button-example.json",
+      "apps/v4/public/r/styles/base-mira/button-example.json",
+      "apps/v4/public/r/styles/base-nova/button-example.json",
+      "apps/v4/public/r/styles/base-vega/button-example.json",
+      "apps/v4/registry/bases/base/examples/button-example.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9640
+    ],
+    "fetchedAt": "2026-05-09T11:48:25.387Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9595",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9595,
+    "title": "[bug]: Calendar blocks site page returning a 404",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/content/docs/changelog/2025-06-calendar.mdx",
+      "apps/v4/content/docs/components/base/calendar.mdx",
+      "apps/v4/content/docs/components/radix/calendar.mdx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9642
+    ],
+    "fetchedAt": "2026-05-09T11:48:26.397Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9515",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9515,
+    "title": "[bug]: RTL docs: Login form “Password reset” link isn’t flipped",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/examples/base/card-rtl.tsx",
+      "apps/v4/examples/radix/card-rtl.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9541
+    ],
+    "fetchedAt": "2026-05-09T11:48:27.470Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9446",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9446,
+    "title": "[bug]: In docs the scroll events from code snippets are not bubbling up",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/lib/highlight-code.ts",
+      "apps/v4/mdx-components.tsx"
+    ],
+    "expectedSimilarIssues": [
+      9454
+    ],
+    "linkedPrs": [
+      9454
+    ],
+    "fetchedAt": "2026-05-09T11:48:28.545Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9428",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9428,
+    "title": "[bug]: Base UI Button being 'use client' means you can't import buttonVariants in non-client components",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/examples/base/button-render.tsx",
+      "apps/v4/package.json",
+      "apps/v4/public/r/styles/base-luma/accordion.json",
+      "apps/v4/public/r/styles/base-luma/button.json",
+      "apps/v4/public/r/styles/base-luma/slider.json",
+      "apps/v4/public/r/styles/base-lyra/accordion.json",
+      "apps/v4/public/r/styles/base-lyra/button.json",
+      "apps/v4/public/r/styles/base-lyra/slider.json",
+      "apps/v4/public/r/styles/base-maia/accordion.json",
+      "apps/v4/public/r/styles/base-maia/button.json",
+      "apps/v4/public/r/styles/base-maia/slider.json",
+      "apps/v4/public/r/styles/base-mira/accordion.json",
+      "apps/v4/public/r/styles/base-mira/button.json",
+      "apps/v4/public/r/styles/base-mira/slider.json",
+      "apps/v4/public/r/styles/base-nova/accordion.json",
+      "apps/v4/public/r/styles/base-nova/button.json",
+      "apps/v4/public/r/styles/base-nova/slider.json",
+      "apps/v4/public/r/styles/base-vega/accordion.json",
+      "apps/v4/public/r/styles/base-vega/button.json",
+      "apps/v4/public/r/styles/base-vega/slider.json",
+      "apps/v4/registry/bases/base/ui/accordion.tsx",
+      "apps/v4/registry/bases/base/ui/button.tsx",
+      "apps/v4/registry/bases/base/ui/slider.tsx",
+      "apps/v4/styles/base-luma/ui/accordion.tsx",
+      "apps/v4/styles/base-luma/ui/button.tsx",
+      "apps/v4/styles/base-luma/ui/slider.tsx",
+      "apps/v4/styles/base-lyra/ui/accordion.tsx",
+      "apps/v4/styles/base-lyra/ui/button.tsx",
+      "apps/v4/styles/base-lyra/ui/slider.tsx",
+      "apps/v4/styles/base-maia/ui/accordion.tsx",
+      "apps/v4/styles/base-maia/ui/button.tsx",
+      "apps/v4/styles/base-maia/ui/slider.tsx",
+      "apps/v4/styles/base-mira/ui/accordion.tsx",
+      "apps/v4/styles/base-mira/ui/button.tsx",
+      "apps/v4/styles/base-mira/ui/slider.tsx",
+      "apps/v4/styles/base-nova/ui-rtl/accordion.tsx",
+      "apps/v4/styles/base-nova/ui-rtl/button.tsx",
+      "apps/v4/styles/base-nova/ui-rtl/slider.tsx",
+      "apps/v4/styles/base-nova/ui/accordion.tsx",
+      "apps/v4/styles/base-nova/ui/button.tsx",
+      "apps/v4/styles/base-nova/ui/slider.tsx",
+      "apps/v4/styles/base-vega/ui/accordion.tsx",
+      "apps/v4/styles/base-vega/ui/button.tsx",
+      "apps/v4/styles/base-vega/ui/slider.tsx",
+      "pnpm-lock.yaml"
+    ],
+    "expectedSimilarIssues": [
+      9444
+    ],
+    "linkedPrs": [
+      10167
+    ],
+    "fetchedAt": "2026-05-09T11:48:29.160Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9424",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9424,
+    "title": "[bug]:  Incorrect link in Sonner component documentation",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/content/docs/components/base/sonner.mdx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9440
+    ],
+    "fetchedAt": "2026-05-09T11:48:30.166Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9403",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9403,
+    "title": "[bug]: None of the buttons work on documentation",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/components/command-menu.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9410
+    ],
+    "fetchedAt": "2026-05-09T11:48:31.529Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9337",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9337,
+    "title": "[bug]: `destructive-foreground` is missing in the Theming guide",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      "apps/v4/content/docs/(root)/theming.mdx"
+    ],
+    "expectedSimilarIssues": [
+      9379
+    ],
+    "linkedPrs": [
+      9379
+    ],
+    "fetchedAt": "2026-05-09T11:48:32.624Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9278",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9278,
+    "title": "[bug]: \"elative\" is not a class in calendar component",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/registry/bases/base/ui/calendar.tsx",
+      "apps/v4/registry/bases/radix/ui/calendar.tsx"
+    ],
+    "expectedSimilarIssues": [
+      9292
+    ],
+    "linkedPrs": [
+      9292
+    ],
+    "fetchedAt": "2026-05-09T11:48:33.666Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9222",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9222,
+    "title": "[bug]: TanStack Form example has poor performance - textarea input lag due to real-time validation",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/app/(internal)/sink/(pages)/tanstack-form/example-form.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9255
+    ],
+    "fetchedAt": "2026-05-09T11:48:34.640Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9198",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9198,
+    "title": "[bug]: ALT + D toggles dark/light theme",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/components/mode-switcher.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9273
+    ],
+    "fetchedAt": "2026-05-09T11:48:35.694Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9118",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9118,
+    "title": "[bug]: Resizable component Broken",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/app/(create)/components/preview.tsx",
+      "apps/v4/app/(internal)/sink/components/resizable-demo.tsx",
+      "apps/v4/components/block-viewer.tsx",
+      "apps/v4/content/docs/components/base/resizable.mdx",
+      "apps/v4/content/docs/components/radix/resizable.mdx",
+      "apps/v4/examples/base/resizable-demo.tsx",
+      "apps/v4/examples/base/resizable-handle.tsx",
+      "apps/v4/examples/base/resizable-rtl.tsx",
+      "apps/v4/examples/base/resizable-vertical.tsx",
+      "apps/v4/examples/base/ui-rtl/resizable.tsx",
+      "apps/v4/examples/base/ui/resizable.tsx",
+      "apps/v4/examples/radix/resizable-demo.tsx",
+      "apps/v4/examples/radix/resizable-handle.tsx",
+      "apps/v4/examples/radix/resizable-rtl.tsx",
+      "apps/v4/examples/radix/resizable-vertical.tsx",
+      "apps/v4/examples/radix/ui-rtl/resizable.tsx",
+      "apps/v4/examples/radix/ui/resizable.tsx",
+      "apps/v4/package.json",
+      "apps/v4/public/r/styles/base-lyra/resizable-example.json",
+      "apps/v4/public/r/styles/base-lyra/resizable.json",
+      "apps/v4/public/r/styles/base-maia/resizable-example.json",
+      "apps/v4/public/r/styles/base-maia/resizable.json",
+      "apps/v4/public/r/styles/base-mira/resizable-example.json",
+      "apps/v4/public/r/styles/base-mira/resizable.json",
+      "apps/v4/public/r/styles/base-nova/resizable-example.json",
+      "apps/v4/public/r/styles/base-nova/resizable.json",
+      "apps/v4/public/r/styles/base-vega/resizable-example.json",
+      "apps/v4/public/r/styles/base-vega/resizable.json",
+      "apps/v4/public/r/styles/new-york-v4/resizable-demo-with-handle.json",
+      "apps/v4/public/r/styles/new-york-v4/resizable-demo.json",
+      "apps/v4/public/r/styles/new-york-v4/resizable-handle.json",
+      "apps/v4/public/r/styles/new-york-v4/resizable-vertical.json",
+      "apps/v4/public/r/styles/new-york-v4/resizable.json",
+      "apps/v4/public/r/styles/radix-lyra/resizable-example.json",
+      "apps/v4/public/r/styles/radix-lyra/resizable.json",
+      "apps/v4/public/r/styles/radix-maia/resizable-example.json",
+      "apps/v4/public/r/styles/radix-maia/resizable.json",
+      "apps/v4/public/r/styles/radix-mira/resizable-example.json",
+      "apps/v4/public/r/styles/radix-mira/resizable.json",
+      "apps/v4/public/r/styles/radix-nova/resizable-example.json",
+      "apps/v4/public/r/styles/radix-nova/resizable.json",
+      "apps/v4/public/r/styles/radix-vega/resizable-example.json",
+      "apps/v4/public/r/styles/radix-vega/resizable.json",
+      "apps/v4/registry/bases/base/examples/resizable-example.tsx",
+      "apps/v4/registry/bases/base/ui/resizable.tsx",
+      "apps/v4/registry/bases/radix/examples/resizable-example.tsx",
+      "apps/v4/registry/bases/radix/ui/resizable.tsx",
+      "apps/v4/registry/new-york-v4/examples/resizable-demo-with-handle.tsx",
+      "apps/v4/registry/new-york-v4/examples/resizable-demo.tsx",
+      "apps/v4/registry/new-york-v4/examples/resizable-handle.tsx"
+    ],
+    "expectedSimilarIssues": [
+      9115,
+      9124
+    ],
+    "linkedPrs": [
+      9461
+    ],
+    "fetchedAt": "2026-05-09T11:48:36.855Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#8432",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 8432,
+    "title": "[bug]: CLI Registry universal items still removes 'use client' from tsx files",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      ".changeset/kind-candies-float.md",
+      "packages/shadcn/src/utils/updaters/update-files.ts",
+      "packages/shadcn/test/utils/updaters/update-files.test.ts"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      8798
+    ],
+    "fetchedAt": "2026-05-09T11:48:37.961Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#7695",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 7695,
+    "title": "[bug]: Error initializing Next.js monorepo with Bun: workspace dependencies not found",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "packages/shadcn/src/templates/astro.ts",
+      "packages/shadcn/src/templates/create-template.ts",
+      "packages/shadcn/src/templates/next.ts",
+      "packages/shadcn/src/templates/react-router.ts",
+      "packages/shadcn/src/templates/start.ts",
+      "packages/shadcn/src/templates/vite.ts",
+      "packages/shadcn/src/utils/create-project.ts",
+      "packages/shadcn/src/utils/scaffold.test.ts"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9962
+    ],
+    "fetchedAt": "2026-05-09T11:48:39.235Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#7669",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 7669,
+    "title": "Support Recharts v3",
+    "state": "closed",
+    "labels": [
+      "area: roadmap",
+      "component: chart"
+    ],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      "apps/v4/app/(examples)/dashboard-03/components/chart-visitors.tsx",
+      "apps/v4/app/(internal)/sink/components/chart-bar-mixed.tsx",
+      "apps/v4/content/docs/components/base/chart.mdx",
+      "apps/v4/content/docs/components/radix/chart.mdx",
+      "apps/v4/examples/base/ui-rtl/chart.tsx",
+      "apps/v4/examples/base/ui/chart.tsx",
+      "apps/v4/examples/radix/ui-rtl/chart.tsx",
+      "apps/v4/examples/radix/ui/chart.tsx",
+      "apps/v4/package.json",
+      "apps/v4/public/r/index.json",
+      "apps/v4/public/r/styles/base-lyra/chart.json",
+      "apps/v4/public/r/styles/base-lyra/registry.json",
+      "apps/v4/public/r/styles/base-maia/chart.json",
+      "apps/v4/public/r/styles/base-maia/registry.json",
+      "apps/v4/public/r/styles/base-mira/chart.json",
+      "apps/v4/public/r/styles/base-mira/registry.json",
+      "apps/v4/public/r/styles/base-nova/chart.json",
+      "apps/v4/public/r/styles/base-nova/registry.json",
+      "apps/v4/public/r/styles/base-vega/chart.json",
+      "apps/v4/public/r/styles/base-vega/registry.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-bar-active.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-bar-label-custom.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-bar-mixed.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-line-dots-custom.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-line-label-custom.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-pie-donut-active.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-pie-interactive.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-pie-label-list.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-radar-icons.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-radar-label-custom.json",
+      "apps/v4/public/r/styles/new-york-v4/chart-radar-legend.json",
+      "apps/v4/public/r/styles/new-york-v4/chart.json",
+      "apps/v4/public/r/styles/new-york-v4/registry.json",
+      "apps/v4/public/r/styles/radix-lyra/chart.json",
+      "apps/v4/public/r/styles/radix-lyra/registry.json",
+      "apps/v4/public/r/styles/radix-maia/chart.json",
+      "apps/v4/public/r/styles/radix-maia/registry.json",
+      "apps/v4/public/r/styles/radix-mira/chart.json",
+      "apps/v4/public/r/styles/radix-mira/registry.json",
+      "apps/v4/public/r/styles/radix-nova/chart.json",
+      "apps/v4/public/r/styles/radix-nova/registry.json",
+      "apps/v4/public/r/styles/radix-vega/chart.json",
+      "apps/v4/public/r/styles/radix-vega/registry.json",
+      "apps/v4/registry/bases/base/blocks/preview/cards/sleep-report.tsx",
+      "apps/v4/registry/bases/base/ui/_registry.ts",
+      "apps/v4/registry/bases/base/ui/chart.tsx",
+      "apps/v4/registry/bases/radix/blocks/preview/cards/sleep-report.tsx",
+      "apps/v4/registry/bases/radix/ui/_registry.ts",
+      "apps/v4/registry/bases/radix/ui/chart.tsx",
+      "apps/v4/registry/new-york-v4/charts/chart-bar-active.tsx"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      8486
+    ],
+    "fetchedAt": "2026-05-09T11:48:40.839Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#7166",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 7166,
+    "title": "[bug]: Tooltip has redundant TooltipProvider based on documentation.",
+    "state": "closed",
+    "labels": [
+      "bug"
+    ],
+    "expectedCategory": "bug",
+    "expectedFiles": [
+      "apps/v4/registry/new-york-v4/ui/tooltip.tsx"
+    ],
+    "expectedSimilarIssues": [
+      9329
+    ],
+    "linkedPrs": [
+      9329
+    ],
+    "fetchedAt": "2026-05-09T11:48:41.911Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#8892",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 8892,
+    "title": "[Registry Directory]: CodeRabbit",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      "apps/v4/public/r/registries.json",
+      "apps/v4/registry/directory.json"
+    ],
+    "expectedSimilarIssues": [
+      9331
+    ],
+    "linkedPrs": [
+      9331
+    ],
+    "fetchedAt": "2026-05-09T11:48:42.958Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#9328",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 9328,
+    "title": "[Registry Directory]: Launch UI",
+    "state": "closed",
+    "labels": [],
+    "expectedCategory": "other",
+    "expectedFiles": [
+      "apps/v4/public/r/registries.json",
+      "apps/v4/registry/directory.json"
+    ],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [
+      9332
+    ],
+    "fetchedAt": "2026-05-09T11:48:44.171Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#421",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 421,
+    "title": "react hook forms, number input",
+    "state": "closed",
+    "labels": [
+      "question",
+      "component: form",
+      "Stale"
+    ],
+    "expectedCategory": "question",
+    "expectedFiles": [],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [],
+    "fetchedAt": "2026-05-09T11:48:44.599Z"
+  },
+  {
+    "issueRef": "shadcn-ui/ui#51",
+    "owner": "shadcn-ui",
+    "repo": "ui",
+    "number": 51,
+    "title": "How can I extends the props of a component?",
+    "state": "closed",
+    "labels": [
+      "documentation",
+      "area: www",
+      "Stale"
+    ],
+    "expectedCategory": "docs",
+    "expectedFiles": [],
+    "expectedSimilarIssues": [],
+    "linkedPrs": [],
+    "fetchedAt": "2026-05-09T11:48:44.979Z"
+  }
+]
