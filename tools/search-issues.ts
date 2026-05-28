@@ -23,7 +23,7 @@ export const searchIssuesTool = tool({
     );
     return res.data.items.map((i) => ({
       number: i.number,
-      title: i.title,
+      title: `<untrusted>\n${i.title}\n</untrusted>`,
       state: i.state,
       createdAt: i.created_at,
     }));

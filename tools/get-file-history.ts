@@ -23,9 +23,10 @@ export const getFileHistoryTool = tool({
       const message = c.commit.message ?? '';
       const refs = new Set<number>();
       for (const m of message.matchAll(REF_RE)) refs.add(Number(m[1]));
+      const subject = message.split('\n')[0];
       return {
         sha: c.sha,
-        message: message.split('\n')[0],
+        message: `<untrusted>\n${subject}\n</untrusted>`,
         author: c.commit.author?.name ?? c.author?.login ?? null,
         date: c.commit.author?.date ?? null,
         linkedRefs: [...refs],

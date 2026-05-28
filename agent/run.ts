@@ -7,7 +7,6 @@ import {
   type LanguageModel,
   type ModelMessage,
 } from 'ai';
-import { google } from '@ai-sdk/google';
 import { tools } from '@/tools/registry';
 import { systemPrompt } from '@/agent/system-prompt';
 import { dedupRecentToolCalls } from '@/tools/__helpers__/dedup';
@@ -30,8 +29,8 @@ export type ModelKey = keyof typeof MODEL_IDS;
 
 export function modelFor(key: ModelKey): LanguageModel {
   if (key === 'gpt-4o') return gateway('openai/gpt-4o') as unknown as LanguageModel;
-  if (key === 'gemini-flash') return google('gemini-2.5-flash') as unknown as LanguageModel;
-  if (key === 'gemini-pro') return google('gemini-2.5-pro') as unknown as LanguageModel;
+  if (key === 'gemini-flash') return gateway('google/gemini-2.5-flash') as unknown as LanguageModel;
+  if (key === 'gemini-pro') return gateway('google/gemini-2.5-pro') as unknown as LanguageModel;
   return gateway('anthropic/claude-sonnet-4-6') as unknown as LanguageModel;
 }
 

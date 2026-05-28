@@ -28,16 +28,17 @@ export const readFileTool = tool({
     }
     const buffer = Buffer.from(file.content ?? '', (file.encoding as BufferEncoding) ?? 'base64');
     const size = file.size ?? buffer.length;
+    const wrap = (raw: string) => `<untrusted>\n${raw}\n</untrusted>`;
     if (buffer.length > MAX_BYTES) {
       const head = buffer.subarray(0, HEAD_BYTES).toString('utf8');
       const tail = buffer.subarray(buffer.length - TAIL_BYTES).toString('utf8');
       return {
         path,
         size,
-        content: `${head}\n\n... [truncated ${buffer.length - HEAD_BYTES - TAIL_BYTES} bytes] ...\n\n${tail}`,
+        content: wrap(`${head}\n\n... [truncated ${buffer.length - HEAD_BYTES - TAIL_BYTES} bytes] ...\n\n${tail}`),
         truncated: true,
       };
     }
-    return { path, size, content: buffer.toString('utf8'), truncated: false };
+    return { path, size, content: wrap(buffer.toString('utf8')), truncated: false };
   },
 });

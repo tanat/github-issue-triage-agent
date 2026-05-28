@@ -33,11 +33,13 @@ export const getIssueTool = tool({
       if (typeof v === 'number' && v > 0) reactions[key] = v;
     }
 
+    const wrap = (s: string) => `<untrusted>\n${s}\n</untrusted>`;
+
     return {
       number: issue.data.number,
-      title: issue.data.title,
+      title: wrap(issue.data.title),
       state: issue.data.state,
-      body: issue.data.body ?? '',
+      body: wrap(issue.data.body ?? ''),
       author: issue.data.user?.login ?? null,
       createdAt: issue.data.created_at,
       labels: (issue.data.labels ?? []).map((l) =>
@@ -45,7 +47,7 @@ export const getIssueTool = tool({
       ).filter(Boolean),
       comments: comments.data.map((c) => ({
         author: c.user?.login ?? null,
-        body: c.body ?? '',
+        body: wrap(c.body ?? ''),
         createdAt: c.created_at,
       })),
       reactionSummary: Object.keys(reactions).length > 0 ? reactions : undefined,
