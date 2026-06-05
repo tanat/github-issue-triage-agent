@@ -1,6 +1,8 @@
+import { after } from 'next/server';
 import { z } from 'zod';
 import { parseIssueUrl, InvalidUrlError } from '@/github/parse-url';
 import { runTriage } from '@/agent/run';
+import { langfuseSpanProcessor } from '@/instrumentation';
 
 export const runtime = 'nodejs';
 export const maxDuration = 120;
@@ -46,5 +48,10 @@ export async function POST(req: Request) {
   const response = stream.toUIMessageStreamResponse();
   response.headers.set('x-run-id', runId);
   response.headers.set('x-run-started-at', String(startedAt));
+  // Flush buffered Langfuse spans after the stream finishes — before the
+  // serverless function freezes. Runs once the response body is fully sent.
+  after(async () => {
+    await langfuseSpanProcessor.forceFlush();
+  });
   return response;
 }
