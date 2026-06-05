@@ -43,7 +43,7 @@ next-env.d.ts
 
 # project-specific
 logs/*.sqlite
-logs/*.sqlite-journal
+logs/*.sqlite-*
 runs/*.json
 notes.md
 STUCK.md
