@@ -79,6 +79,15 @@ export function runTriage(opts: RunTriageOptions) {
     messages: initialMessages,
     tools,
     stopWhen: stepCountIs(STEP_HARD_CAP),
+    // Emit OpenTelemetry spans (one per LLM step + tool call) that the
+    // LangfuseSpanProcessor in instrumentation.ts exports to Langfuse.
+    // No-op if Langfuse env keys are unset — the SDK still emits spans, but
+    // nothing exports them. runId/model land as searchable trace metadata.
+    experimental_telemetry: {
+      isEnabled: true,
+      functionId: 'triage-stream',
+      metadata: { runId, modelKey, model: modelId },
+    },
     prepareStep: isAnthropic
       ? withAnthropicCache(dedupRecentToolCalls)
       : dedupRecentToolCalls,
@@ -177,6 +186,13 @@ export async function runTriageOnce(opts: RunTriageOptions): Promise<TriageRunRe
     messages: initialMessages,
     tools,
     stopWhen: stepCountIs(STEP_HARD_CAP),
+    // Same telemetry as the streaming path. functionId distinguishes eval/once
+    // runs from live stream runs in the Langfuse dashboard.
+    experimental_telemetry: {
+      isEnabled: true,
+      functionId: 'triage-once',
+      metadata: { runId, modelKey, model: modelId },
+    },
     prepareStep: isAnthropic
       ? withAnthropicCache(dedupRecentToolCalls)
       : dedupRecentToolCalls,
