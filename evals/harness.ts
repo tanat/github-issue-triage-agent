@@ -6,6 +6,7 @@ import { aggregateScores, scoreIssue, type ExpectedFixture, type PerIssueScore }
 import type { Category } from '@/schemas/v1/triage-card';
 import { PROMPT_VERSION } from '@/agent/system-prompt';
 import { SCHEMA_VERSION } from '@/schemas/v1/triage-card';
+import { initTelemetry, flushTelemetry } from '@/evals/telemetry';
 
 interface Fixture extends ExpectedFixture {
   owner: string;
@@ -35,6 +36,7 @@ function parseModelArg(): ModelKey {
 }
 
 async function main() {
+  initTelemetry();
   const modelKey = parseModelArg();
   const fixturesPath = path.join(process.cwd(), 'fixtures', 'issues.json');
   if (!fs.existsSync(fixturesPath)) {
@@ -106,7 +108,10 @@ async function main() {
   console.log(`\nWrote run to ${resultsPath} (${history.length} total entries).`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main()
+  .then(() => flushTelemetry())
+  .catch(async (err) => {
+    console.error(err);
+    await flushTelemetry();
+    process.exit(1);
+  });
