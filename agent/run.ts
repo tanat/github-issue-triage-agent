@@ -6,6 +6,7 @@ import {
   gateway,
   type LanguageModel,
   type ModelMessage,
+  type SystemModelMessage,
 } from 'ai';
 import { propagateAttributes } from '@langfuse/tracing';
 import { tools } from '@/tools/registry';
@@ -13,7 +14,7 @@ import { systemPrompt } from '@/agent/system-prompt';
 import { dedupRecentToolCalls } from '@/tools/__helpers__/dedup';
 import { withAnthropicCache } from '@/agent/prepare-step-cache';
 import { logStep } from '@/agent/log';
-import { TriageCard, type TriageCard as TriageCardType } from '@/schemas/v1/triage-card';
+import { extractTriageCard, type TriageCard as TriageCardType } from '@/schemas/v1/triage-card';
 import type { TrajectoryStep } from '@/evals/score';
 
 export const STEP_HARD_CAP = 8;
@@ -52,6 +53,27 @@ function triageTraceContext(issueUrl: string, modelKey: ModelKey, runId: string)
   };
 }
 
+/**
+ * The system prompt, built as a SystemModelMessage so it can be passed via the
+ * `system` option rather than inlined into `messages` — the AI SDK warns about
+ * (and can be configured to reject) system roles inside the messages array as a
+ * prompt-injection surface. For Anthropic models it carries an ephemeral
+ * cacheControl breakpoint so the large, static system prompt is billed as cached
+ * input ($0.30/M vs $3/M); see the cost note on runTriage. providerOptions are
+ * preserved on the `system` object, and non-Anthropic models ignore them.
+ */
+function systemMessageFor(isAnthropic: boolean): SystemModelMessage {
+  return {
+    role: 'system',
+    content: systemPrompt,
+    ...(isAnthropic && {
+      providerOptions: {
+        anthropic: { cacheControl: { type: 'ephemeral' } },
+      },
+    }),
+  };
+}
+
 export interface RunTriageOptions {
   issueUrl: string;
   parsedSummary: string;
@@ -69,23 +91,14 @@ export function runTriage(opts: RunTriageOptions) {
   let cumulativeTokens = 0;
   let budgetWarned = false;
 
-  // For Anthropic models, mark the system prompt as a sticky cache breakpoint
-  // and the rolling tail as an ephemeral one (added per-step in prepareStep).
-  // Sonnet 4-6 + ephemeral caching: cached input tokens cost $0.30/M instead
-  // of $3/M, which on this corpus (~70K accumulated input per fixture) drops
-  // a full eval pass from ~$7.65 to ~$1.50. Cache breakpoints are passed via
-  // providerOptions on the message blocks; non-Anthropic models ignore them.
+  // For Anthropic models, mark the system prompt as an ephemeral cache
+  // breakpoint (the rolling tail gets its own breakpoint per-step in
+  // prepareStep). Sonnet 4-6 + ephemeral caching: cached input tokens cost
+  // $0.30/M instead of $3/M, which on this corpus (~70K accumulated input per
+  // fixture) drops a full eval pass from ~$7.65 to ~$1.50. The breakpoint rides
+  // on the `system` object's providerOptions; non-Anthropic models ignore it.
   const isAnthropic = modelKey === 'sonnet';
   const initialMessages: ModelMessage[] = [
-    {
-      role: 'system',
-      content: systemPrompt,
-      ...(isAnthropic && {
-        providerOptions: {
-          anthropic: { cacheControl: { type: 'ephemeral' } },
-        },
-      }),
-    },
     {
       role: 'user',
       content: `Triage this GitHub issue: ${opts.issueUrl}\n${opts.parsedSummary}`,
@@ -97,6 +110,7 @@ export function runTriage(opts: RunTriageOptions) {
     () =>
       streamText({
         model: modelFor(modelKey),
+        system: systemMessageFor(isAnthropic),
         messages: initialMessages,
         tools,
         stopWhen: stepCountIs(STEP_HARD_CAP),
@@ -158,22 +172,6 @@ export interface TriageRunResult {
   finishReason: string | null;
 }
 
-function extractCard(text: string): TriageCardType | null {
-  if (!text) return null;
-  // Strip markdown code fences if present: ```json ... ``` or ``` ... ```
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  const candidate = fenced ? fenced[1] : text;
-  const start = candidate.indexOf('{');
-  const end = candidate.lastIndexOf('}');
-  if (start === -1 || end <= start) return null;
-  try {
-    const parsed = TriageCard.safeParse(JSON.parse(candidate.slice(start, end + 1)));
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function runTriageOnce(opts: RunTriageOptions): Promise<TriageRunResult> {
   const modelKey: ModelKey = opts.modelKey ?? 'sonnet';
   const modelId = MODEL_IDS[modelKey];
@@ -189,15 +187,6 @@ export async function runTriageOnce(opts: RunTriageOptions): Promise<TriageRunRe
   const isAnthropic = modelKey === 'sonnet';
   const initialMessages: ModelMessage[] = [
     {
-      role: 'system',
-      content: systemPrompt,
-      ...(isAnthropic && {
-        providerOptions: {
-          anthropic: { cacheControl: { type: 'ephemeral' } },
-        },
-      }),
-    },
-    {
       role: 'user',
       content: `Triage this GitHub issue: ${opts.issueUrl}\n${opts.parsedSummary}`,
     },
@@ -208,6 +197,7 @@ export async function runTriageOnce(opts: RunTriageOptions): Promise<TriageRunRe
     () =>
       generateText({
         model: modelFor(modelKey),
+        system: systemMessageFor(isAnthropic),
         messages: initialMessages,
         tools,
         stopWhen: stepCountIs(STEP_HARD_CAP),
@@ -254,10 +244,10 @@ export async function runTriageOnce(opts: RunTriageOptions): Promise<TriageRunRe
   );
 
   // Try result.text first (final step text), then step texts in reverse (handles cap-hit runs).
-  let card: TriageCardType | null = extractCard(result.text ?? '');
+  let card: TriageCardType | null = extractTriageCard(result.text ?? '');
   if (!card) {
     for (let i = allStepTexts.length - 1; i >= 0; i--) {
-      card = extractCard(allStepTexts[i]);
+      card = extractTriageCard(allStepTexts[i]);
       if (card) break;
     }
   }

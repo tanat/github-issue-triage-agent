@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TraceView, extractFinalText } from '@/render/TraceView';
 import { TriageCardView } from '@/render/TriageCardView';
-import { TriageCard } from '@/schemas/v1/triage-card';
+import { extractTriageCard } from '@/schemas/v1/triage-card';
 import { parseIssueUrl } from '@/github/parse-url';
 import type { ModelKey } from '@/agent/run';
 
@@ -19,22 +19,6 @@ const MODEL_OPTIONS: { value: ModelKey; label: string }[] = [
 ];
 
 const transport = new DefaultChatTransport({ api: '/api/triage' });
-
-function tryParseTriageCard(text: string): TriageCard | null {
-  if (!text) return null;
-  // The model may emit prose around the JSON; grab the largest {...} block.
-  const start = text.indexOf('{');
-  const end = text.lastIndexOf('}');
-  if (start === -1 || end === -1 || end <= start) return null;
-  const candidate = text.slice(start, end + 1);
-  try {
-    const parsed = JSON.parse(candidate);
-    const result = TriageCard.safeParse(parsed);
-    return result.success ? result.data : null;
-  } catch {
-    return null;
-  }
-}
 
 export default function Home() {
   const [url, setUrl] = useState('https://github.com/shadcn-ui/ui/issues/9198');
@@ -50,7 +34,7 @@ export default function Home() {
     }
   }, [url]);
 
-  const card = useMemo(() => tryParseTriageCard(extractFinalText(messages)), [messages]);
+  const card = useMemo(() => extractTriageCard(extractFinalText(messages)), [messages]);
   const running = status === 'streaming' || status === 'submitted';
 
   function onSubmit(e: React.FormEvent) {
