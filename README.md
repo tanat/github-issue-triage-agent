@@ -77,6 +77,7 @@ No hand-labeling. Ground truth is development history that's already publicly av
 - ✅ 25 fixture issues from shadcn-ui/ui with ground truth from their linked PRs
 - ✅ Eval harness: category accuracy, file recall, trajectory analysis
 - ✅ Per-step observability log (SQLite)
+- ✅ Langfuse tracing (OpenTelemetry) — one trace per run with token cost, latency, and tool calls, grouped by issue `sessionId` and tagged by model; runs alongside the SQLite log
 - ✅ DECISIONS.md (4 architectural forks)
 - ✅ Deploy to Vercel
 
@@ -93,6 +94,7 @@ No hand-labeling. Ground truth is development history that's already publicly av
    - `AI_GATEWAY_API_KEY` — one key covers both Claude Sonnet 4.6 and GPT-4o via Vercel AI Gateway
    - `GOOGLE_GENERATIVE_AI_API_KEY` (optional) — Gemini stays direct via `@ai-sdk/google`, free at aistudio.google.com
    - `GITHUB_TOKEN` — a fine-grained PAT with `public_repo` read access (see https://github.com/settings/tokens?type=beta)
+   - `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` (optional) — enable Langfuse tracing; create a free project at [cloud.langfuse.com](https://cloud.langfuse.com). Leave them unset and the app runs unchanged (spans are emitted but not exported).
 3. `pnpm dev` — open http://localhost:3000, paste a `shadcn-ui/ui` issue URL.
 4. `pnpm test` — URL-parser, tool-schema, dedup, and scorer unit tests.
 5. `pnpm build-fixtures` — fetches ground-truth file lists for the issue refs in `scripts/build-fixtures.ts`.
@@ -125,6 +127,7 @@ Open `/eval` in the browser to see per-model aggregate scores and per-issue diff
 - **Prompt-cache-aware step preparation.** `withAnthropicCache` wraps the dedup `prepareStep` and pins an ephemeral cache breakpoint to the rolling message tail each step; the system prompt carries its own sticky breakpoint. Sonnet-only — non-Anthropic providers ignore the marker.
 - **Gateway routing for Anthropic + OpenAI.** A single `AI_GATEWAY_API_KEY` covers both `claude-sonnet-4-6` and `gpt-4o`; no per-provider keys, no per-provider SDKs. Google stays direct because Gateway's Gemini support is less mature.
 - **Eval ground truth from real fix PRs.** Per-issue scores combine category match, file F1 against the actual PR fix, similar-issue Jaccard, and TriageCard schema completeness.
+- **Production observability.** Langfuse + OpenTelemetry trace every run end-to-end — per-step LLM spans, tool calls, token cost, and latency — with re-triages of the same issue grouped under one `sessionId` and tagged by model. Flushed via `after()` on the serverless path and an explicit bootstrap on the eval CLI, since neither auto-flushes. Layered on top of, not replacing, the SQLite step log.
 
 ## Deploying
 

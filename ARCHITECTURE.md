@@ -18,6 +18,7 @@
 | Comparison models | gpt-4o (Gateway), Gemini 2.5 Flash / Pro (direct `@ai-sdk/google`) | cross-model evals |
 | GitHub client | `@octokit/rest` | `advanced_search: 'true'` on issue search, `accept: vnd.github.text-match+json` on code search |
 | Observability log | better-sqlite3 | per-step row, queryable |
+| Tracing | Langfuse + OpenTelemetry (`@langfuse/otel`, `@langfuse/tracing`) | one trace per run; spans carry token cost + latency; grouped by issue `sessionId`, tagged by model |
 | Fixtures storage | JSON files | committed |
 | Deploy | Vercel | env: `AI_GATEWAY_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY` (optional), `GITHUB_TOKEN` |
 
@@ -539,6 +540,16 @@ What a reviewer will see from these logs:
 ```
 
 Useful for re-reasoning without re-running the model.
+
+### Langfuse tracing (OpenTelemetry)
+
+The SQLite log is local and queryable; Langfuse adds a hosted, visual trace of every run with token cost and latency built in. The two run side by side — neither replaces the other.
+
+- **Bootstrap.** `instrumentation.ts` registers a `NodeTracerProvider` with `LangfuseSpanProcessor` (Node runtime only — the Edge runtime is skipped). Next.js loads this file automatically on server startup.
+- **Span emission.** Both `runTriage` (stream) and `runTriageOnce` (eval) pass `experimental_telemetry` to the AI SDK, so each LLM step and tool call becomes a span. `functionId` (`triage-stream` / `triage-once`) names the trace; `metadata` carries `runId` and model.
+- **Trace grouping.** The AI SDK call is wrapped in `propagateAttributes({ sessionId, tags })` (`agent/run.ts`). `sessionId` is derived from the issue URL (`owner/repo#number`), so re-triages of the same issue group together; `tags` carry the model for slicing. Propagated attributes are captured at span start and inherited by every child span.
+- **Flushing.** Spans buffer in-process, so they must be flushed before the function freezes or the process exits. The serverless route flushes via `after(() => langfuseSpanProcessor.forceFlush())`; the eval CLI (which never goes through Next.js) bootstraps its own provider in `evals/telemetry.ts` and flushes in `harness.ts`.
+- **No keys, no problem.** With `LANGFUSE_*` env vars unset, spans are still created but nothing is exported — the app and evals behave exactly as before.
 
 ---
 
