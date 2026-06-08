@@ -13,7 +13,7 @@ In our code option 1 is chosen. Why:
 
 - **Sonnet 4.6 reliably writes valid JSON to the schema** if the system prompt clearly states the contract.
 - A terminal tool complicates the cleanup pipeline and requires that `stopWhen: hasToolCall('submit_triage_card')` integrate with the rest of the logic.
-- Post-parse gives us a fallback — `extractCard()` can pull JSON even from a cap-hit trace (see `04-stopping-conditions.md`).
+- Post-parse gives us a fallback — `extractTriageCard()` can pull JSON even from a cap-hit trace (see `04-stopping-conditions.md`).
 
 > This is a normal pattern ([Vercel AI SDK deep dive](https://www.digitalapplied.com/blog/vercel-ai-sdk-6-deep-dive-features-tool-calls-2026)). An alternative path via [`experimental_output`](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling) exists at Vercel, but for agents with many tools it's less mature.
 
@@ -106,28 +106,36 @@ This is **not for the model**, it's for you. When you look at a trace a week lat
 
 ---
 
-## Extraction: `extractCard()`
+## Extraction: `extractTriageCard()`
 
-From `agent/run.ts:131`:
+Lives in `schemas/v1/triage-card.ts` (so the live UI in `app/page.tsx` and the
+eval path in `agent/run.ts` share one implementation — a client-safe module
+with no server deps):
 
 ```ts
-function extractCard(text: string): TriageCardType | null {
+export function extractTriageCard(text: string): TriageCard | null {
   if (!text) return null;
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  const candidate = fenced ? fenced[1] : text;
-  const start = candidate.indexOf('{');
-  const end = candidate.lastIndexOf('}');
-  if (start === -1 || end <= start) return null;
-  try {
-    const parsed = TriageCard.safeParse(JSON.parse(candidate.slice(start, end + 1)));
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
+  const sources = fenced ? [fenced[1], text] : [text];
+  for (const src of sources) {
+    const candidates = topLevelJsonObjects(src); // balanced, string-aware
+    for (let i = candidates.length - 1; i >= 0; i--) {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(candidates[i]);
+      } catch {
+        continue;
+      }
+      const result = TriageCardLenient.safeParse(parsed);
+      if (result.success) return result.data;
+    }
   }
+  return null;
 }
 ```
 
-It's `~10 lines`, but each is needed. Let's break it down:
+Let's break down why it looks like this — and why it replaced an earlier
+`indexOf('{')` … `lastIndexOf('}')` slice.
 
 ### Step 1: regex on code fences
 
@@ -142,38 +150,58 @@ If there are no fences — take the whole text as is.
 
 A subtlety: `[\s\S]*?` (non-greedy) instead of `.*?` — because `.` doesn't match newlines by default. On multiline JSON you'd lose everything.
 
-### Step 2: first `{` and last `}`
+### Step 2: balanced top-level objects, not first-`{`-to-last-`}`
+
+The original version sliced from the first `{` to the last `}`. That breaks the
+moment the model wraps a **code snippet** around its JSON, e.g.:
+
+> The fix lives near `interface AccordionItemProps { hasBorder?: boolean }`. Final card: { …actual JSON… }
+
+The first `{` now belongs to the snippet, the last `}` to the card → the slice
+is garbage and `JSON.parse` fails. This was a real failure mode in the eval logs
+(several null cards per run).
+
+Instead, `topLevelJsonObjects()` walks the text once, tracking brace depth while
+**ignoring braces inside string literals** (so a `}` inside `draftResponse`
+doesn't truncate the object), and collects every balanced top-level `{…}`. We
+then try them from **last to first** — the final answer usually comes after the
+reasoning prose — and return the first that parses as JSON *and* validates.
+Snippet braces come back as candidates too, but fail JSON.parse / Zod and are
+discarded.
+
+### Step 3: `JSON.parse` + `TriageCardLenient.safeParse`
 
 ```ts
-const start = candidate.indexOf('{');
-const end = candidate.lastIndexOf('}');
-```
-
-The model often writes prose before and after the JSON: "Here is the triage card:\n\n{ ... }\n\nLet me know if you need more details." We take from the first `{` to the last `}` — this gives us the "outermost" JSON, cutting off prose.
-
-This is robust against **nested objects** (because `lastIndexOf('}')` finds the last closing brace, which closes the outer object). It's not robust against **two JSON objects in one text** — but Sonnet 4.6 doesn't do that on our prompt.
-
-### Step 3: `JSON.parse` + `Zod.safeParse`
-
-```ts
-const parsed = TriageCard.safeParse(JSON.parse(candidate.slice(start, end + 1)));
-return parsed.success ? parsed.data : null;
+const parsed = JSON.parse(candidates[i]);
+const result = TriageCardLenient.safeParse(parsed);
+if (result.success) return result.data;
 ```
 
 Double validation:
 
 - `JSON.parse` — syntax;
-- `TriageCard.safeParse` — semantics (enums, length, required fields).
+- `TriageCardLenient.safeParse` — semantics (enums, length, required fields).
 
-`safeParse` matters because plain `.parse` throws — and we have a `try/catch` already, but `safeParse` gives us `.error` for logging (we don't use this yet, but the slot is there).
+Note it's `TriageCardLenient`, not the strict `TriageCard`. The lenient layer is
+a `z.preprocess` that normalizes a few **benign, recurring** provider quirks and
+then pipes into the strict schema (so its output type is exactly `TriageCard`):
+
+- `suspectedFiles[].confidence` emitted as a probability number (`0.9`) instead
+  of the enum → bucketed to `high`/`medium`/`low`;
+- `severity` emitted as `null` / `""` / `"none"` → dropped (the field is optional);
+- `draftResponse` over the 1500-char cap → clamped to 1500.
+
+These three accounted for ~11 of the ~16 null cards in a bad run. The line we do
+**not** cross: it never invents or defaults a *missing* field — a genuinely
+incomplete card still fails (see "What not to do" below).
 
 ### Two-step fallback in `runTriageOnce`
 
 ```ts
-let card: TriageCardType | null = extractCard(result.text ?? '');
+let card: TriageCardType | null = extractTriageCard(result.text ?? '');
 if (!card) {
   for (let i = allStepTexts.length - 1; i >= 0; i--) {
-    card = extractCard(allStepTexts[i]);
+    card = extractTriageCard(allStepTexts[i]);
     if (card) break;
   }
 }
@@ -187,20 +215,27 @@ On hard issues this gives +5–10% completeness.
 
 ---
 
-## What to do if `extractCard` returned `null`
+## What to do if `extractTriageCard` returned `null`
 
 That means:
 
 1. The final wasn't written, and no JSON was found in step_text either;
-2. or JSON exists, but doesn't validate against the schema.
+2. or JSON exists, but doesn't validate even after lenient normalization
+   (missing/empty required field, bad enum value, hopelessly malformed JSON).
 
 In the UI (`runTriage`) we emit ordinary text via the stream — the user sees that something went wrong, or looks at logs.
 
 In eval (`runTriageOnce`) we return `card: null`, and `scoreCompleteness` = 0, `categoryAccuracy` = 0. This penalizes the run in aggregate.
 
-What **not** to do:
+Where the line sits — what's fine vs. what's not:
 
-- **Don't "fix" the JSON programmatically.** If you start sneaking in missing fields with defaults, you'll mask a prompt regression. Better fail loud.
+- **Fine: normalize benign formatting quirks** (what `TriageCardLenient` does).
+  A numeric confidence or a `severity: null` is the model expressing the *right*
+  answer in a slightly off shape — coercing it loses no information and isn't
+  hiding a regression. Keep this list short, explicit, and tested.
+- **Don't invent or default *missing* fields.** If `reasoning` or `category` is
+  absent, do **not** fill it in — that masks a real prompt regression. Fail loud
+  (the card stays `null`).
 - **Don't re-call the model** asking it to "reformat". This bloats the agent and measures poorly.
 
 The best strategy — **improve the prompt and check via evals**. If `completeness < 0.9` on our corpus — that's a signal to redo the system prompt.
@@ -263,7 +298,7 @@ In evals the completeness difference is about 1–2%. Doesn't justify the compli
 
 ## What to try
 
-1. **Break the regex on code fences.** Run on an issue where the model writes JSON without fences — check that `extractCard` still catches it.
+1. **Break the regex on code fences.** Run on an issue where the model writes JSON without fences — check that `extractTriageCard` still catches it.
 2. **Add a field `confidence_in_triage` (0–1)** to `TriageCard`. Run 5 fixtures, see how Sonnet 4.6 calibrates — usually overconfident at 0.85–0.95.
 3. **Swap a `category`**: rename `duplicate` → `is_duplicate`. Run evals. `categoryAccuracy` should drop, because the prompt instructions say the old name. Look in `runs/*.json` — the model will write `"category": "duplicate"`, valid parsing fails. This will give you a feel for how fragile the enum-name + prompt contract is.
 
