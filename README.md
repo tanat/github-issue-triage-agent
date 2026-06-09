@@ -6,11 +6,9 @@
 
 ## What it is and why
 
-This is the third project in your AI Product Engineer portfolio. After Clinical Trial Extractor (`generateObject`) and Streaming Symptom Intake (`streamObject` + `useObject`) — this one is **agent loops**.
+An **agent loop** over the GitHub REST API: `streamText` + `tools` + `stopWhen` + `prepareStep` — four AI SDK primitives — plus Anthropic prompt caching wired through `providerOptions`, and tool design for a non-deterministic consumer.
 
-Technically: `streamText` + `tools` + `stopWhen` + `prepareStep` — four AI SDK primitives, hands-on, plus Anthropic prompt caching wired through `providerOptions`. Plus tool design for a non-deterministic consumer.
-
-Domain-wise: GitHub. Every engineer knows what an issue, a file, and a commit are. You don't have to explain context in the demo — you just paste an issue URL and a few seconds later you can see the agent triaging it.
+Domain-wise: GitHub. Every engineer knows what an issue, a file, and a commit are — paste an issue URL and a few seconds later you watch the agent triage it.
 
 ## Wow moment
 
