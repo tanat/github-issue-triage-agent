@@ -89,8 +89,7 @@ No hand-labeling. Ground truth is development history that's already publicly av
 
 1. `pnpm install`
 2. Copy `.env.local.example` to `.env.local` and set:
-   - `AI_GATEWAY_API_KEY` — one key covers both Claude Sonnet 4.6 and GPT-4o via Vercel AI Gateway
-   - `GOOGLE_GENERATIVE_AI_API_KEY` (optional) — Gemini stays direct via `@ai-sdk/google`, free at aistudio.google.com
+   - `AI_GATEWAY_API_KEY` — one key covers all models (Claude Sonnet 4.6, GPT-4o, and Gemini 2.5 Flash / Pro) via Vercel AI Gateway
    - `GITHUB_TOKEN` — a fine-grained PAT with `public_repo` read access (see https://github.com/settings/tokens?type=beta)
    - `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` (optional) — enable Langfuse tracing; create a free project at [cloud.langfuse.com](https://cloud.langfuse.com). Leave them unset and the app runs unchanged (spans are emitted but not exported).
 3. `pnpm dev` — open http://localhost:3000, paste a `shadcn-ui/ui` issue URL.
@@ -104,8 +103,8 @@ No hand-labeling. Ground truth is development history that's already publicly av
 **UI** — the model selector dropdown on the main page lets you pick per-run:
 - **Claude Sonnet 4.6** — best overall quality, routed through `gateway('anthropic/claude-sonnet-4-6')`. Ephemeral prompt caching is enabled on this model only, cutting eval cost ~5×.
 - **GPT-4o** — routed through `gateway('openai/gpt-4o')`.
-- **Gemini 2.5 Flash** — fast and cheap, free tier on Google AI Studio, ~10-15% lower accuracy. Direct via `@ai-sdk/google`.
-- **Gemini 2.5 Pro** — quality close to Sonnet. Direct via `@ai-sdk/google`.
+- **Gemini 2.5 Flash** — fast and cheap, ~10-15% lower accuracy, routed through `gateway('google/gemini-2.5-flash')`.
+- **Gemini 2.5 Pro** — quality close to Sonnet, routed through `gateway('google/gemini-2.5-pro')`.
 
 **Eval** — each model appends its own row to `evals/results.json` so runs are always comparable:
 
@@ -123,10 +122,10 @@ Open `/eval` in the browser to see per-model aggregate scores and per-issue diff
 - **Tool design under uncertainty.** Six read-only tools at medium granularity, each accepting plain inputs (not GitHub query syntax) so the model can't hallucinate qualifiers. Decisions in [DECISIONS.md](./DECISIONS.md).
 - **Two-layer stopping discipline.** `stopWhen: stepCountIs(8)` plus a `prepareStep` deduplicator that catches structural loops mid-trajectory. Verified by unit tests in `tools/__tests__/dedup.test.ts`.
 - **Prompt-cache-aware step preparation.** `withAnthropicCache` wraps the dedup `prepareStep` and pins an ephemeral cache breakpoint to the rolling message tail each step; the system prompt carries its own sticky breakpoint. Sonnet-only — non-Anthropic providers ignore the marker.
-- **Gateway routing for Anthropic + OpenAI.** A single `AI_GATEWAY_API_KEY` covers both `claude-sonnet-4-6` and `gpt-4o`; no per-provider keys, no per-provider SDKs. Google stays direct because Gateway's Gemini support is less mature.
+- **Gateway routing for all providers.** A single `AI_GATEWAY_API_KEY` covers every model — `claude-sonnet-4-6`, `gpt-4o`, and `gemini-2.5-flash` / `gemini-2.5-pro` — each via `gateway('provider/model')`; no per-provider keys, no per-provider SDKs.
 - **Eval ground truth from real fix PRs.** Per-issue scores combine category match, file F1 against the actual PR fix, similar-issue Jaccard, and TriageCard schema completeness.
 - **Production observability.** Langfuse + OpenTelemetry trace every run end-to-end — per-step LLM spans, tool calls, token cost, and latency — with re-triages of the same issue grouped under one `sessionId` and tagged by model. Flushed via `after()` on the serverless path and an explicit bootstrap on the eval CLI, since neither auto-flushes. Layered on top of, not replacing, the SQLite step log.
 
 ## Deploying
 
-The repo is Vercel-ready: `logs/` SQLite writes and `runs/*.json` writes are gated on `process.env.VERCEL`. In production the eval data committed to `evals/results.json` is the source of truth — runtime logging is disabled. Set `AI_GATEWAY_API_KEY`, optionally `GOOGLE_GENERATIVE_AI_API_KEY`, and `GITHUB_TOKEN` in the Vercel dashboard.
+The repo is Vercel-ready: `logs/` SQLite writes and `runs/*.json` writes are gated on `process.env.VERCEL`. In production the eval data committed to `evals/results.json` is the source of truth — runtime logging is disabled. Set `AI_GATEWAY_API_KEY` and `GITHUB_TOKEN` in the Vercel dashboard.

@@ -13,14 +13,14 @@
 | Styling | Tailwind CSS + shadcn/ui | trace viewer + final card |
 | AI SDK | Vercel AI SDK v6 | `streamText` + `tools` + `stopWhen` + `prepareStep` |
 | Schema validation | Zod 4 | per-tool input + final output |
-| Model routing | Vercel AI Gateway | `gateway('anthropic/claude-sonnet-4-6')`, `gateway('openai/gpt-4o')` — one key, no per-provider SDKs |
+| Model routing | Vercel AI Gateway | `gateway('anthropic/claude-sonnet-4-6')`, `gateway('openai/gpt-4o')`, `gateway('google/gemini-2.5-flash')` / `gateway('google/gemini-2.5-pro')` — one key, no per-provider SDKs |
 | Primary model | Claude Sonnet 4.6 | `claude-sonnet-4-6` via Gateway — best trajectory quality, gets ephemeral prompt caching |
-| Comparison models | gpt-4o (Gateway), Gemini 2.5 Flash / Pro (direct `@ai-sdk/google`) | cross-model evals |
+| Comparison models | gpt-4o, Gemini 2.5 Flash / Pro (all via Gateway) | cross-model evals |
 | GitHub client | `@octokit/rest` | `advanced_search: 'true'` on issue search, `accept: vnd.github.text-match+json` on code search |
 | Observability log | better-sqlite3 | per-step row, queryable |
 | Tracing | Langfuse + OpenTelemetry (`@langfuse/otel`, `@langfuse/tracing`) | one trace per run; spans carry token cost + latency; grouped by issue `sessionId`, tagged by model |
 | Fixtures storage | JSON files | committed |
-| Deploy | Vercel | env: `AI_GATEWAY_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY` (optional), `GITHUB_TOKEN` |
+| Deploy | Vercel | env: `AI_GATEWAY_API_KEY`, `GITHUB_TOKEN` |
 
 **Intentionally not used:** GitHub's GraphQL API (REST is enough), webhooks, mutating operations (read-only agent), Redis cache (Octokit has one built in, plus a SQLite-cache table on dev).
 
@@ -302,7 +302,6 @@ See [DECISIONS.md](./DECISIONS.md) for the rationale behind tool granularity and
 ```ts
 // agent/run.ts
 import { streamText, stepCountIs, gateway, type ModelMessage } from 'ai';
-import { google } from '@ai-sdk/google';
 import { tools } from '@/tools/registry';
 import { systemPrompt } from '@/agent/system-prompt';
 import { logStep } from '@/agent/log';
@@ -311,8 +310,8 @@ import { withAnthropicCache } from '@/agent/prepare-step-cache';
 
 export function modelFor(key: ModelKey) {
   if (key === 'gpt-4o') return gateway('openai/gpt-4o');
-  if (key === 'gemini-flash') return google('gemini-2.5-flash');
-  if (key === 'gemini-pro') return google('gemini-2.5-pro');
+  if (key === 'gemini-flash') return gateway('google/gemini-2.5-flash');
+  if (key === 'gemini-pro') return gateway('google/gemini-2.5-pro');
   return gateway('anthropic/claude-sonnet-4-6');
 }
 
@@ -560,4 +559,4 @@ Four decisions with rationale and cost are written up in [DECISIONS.md](./DECISI
 1. Six medium-grain tools, not one omnibus or fifteen micro-tools.
 2. `stopWhen: stepCountIs(8)` *and* `prepareStep` dedup, not either alone.
 3. Read-only tool surface, not mutating triage actions.
-4. AI Gateway for Anthropic + OpenAI, direct SDK for Google, ephemeral prompt caching only on Sonnet.
+4. One AI Gateway for all providers (incl. Gemini), ephemeral prompt caching only on Sonnet.
