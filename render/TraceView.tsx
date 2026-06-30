@@ -110,7 +110,7 @@ export function TraceView({
 
   return (
     <Frame count={count} running={running}>
-      <ScrollArea className="flex-1 scroll-slim">
+      <ScrollArea className="min-h-0 flex-1 scroll-slim">
         <div className="space-y-2 p-3">
           {items.map((part, i) => {
             const tool = extractToolPart(part);
