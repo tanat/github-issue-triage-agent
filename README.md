@@ -1,5 +1,7 @@
 # GitHub Issue Triage Agent
 
+**[Live demo →](https://github-issue-triage-agent.vercel.app)**
+
 > You feed in any issue from a public repo — the agent picks 4–8 steps on its own: hits the issue tracker, searches for similar issues, reads files, looks at commit history — and assembles a typed triage card with category, suspected files, links to similar issues, and a draft response. Every step is visible in real time.
 
 ---
